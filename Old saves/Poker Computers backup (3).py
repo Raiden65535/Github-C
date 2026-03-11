@@ -306,7 +306,7 @@ def Ranking_System():
         
              
     for i in range(0,5):
-        if Num_list[i] == Num_list[i+2] and Score < 4:
+        if Num_list[i] == Num_list[i+2]:
             Triple_num = Num_list[i]
             Minirank = Triple_num
             Placeholder = Triple_num

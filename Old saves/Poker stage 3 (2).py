@@ -428,7 +428,8 @@ def Ranking_System():
     elif Score == 3:
         print("Pair of pairs with ",Pair_number,"s", sep = "")
     elif Score == 2:
-        print("Pair of ",Pair_number,"s", sep = "")
+        print("Pair of ",Pair_number,"s")
+
 #Pair_numBER and such is used as that uses Jack/Queen etc while Pair_num is just 11/12
 #, sep = "" is to remove the space between the number and the s, so 5s instead of 5 s
     
