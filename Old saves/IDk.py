@@ -1,15 +1,23 @@
 import random
+import sys
+import tkinter as tk
+import os
+
+root = tk.Tk()
+
 Suit_option = ["Hearts","Diamonds","Clubs","Spades"]
 Flush = []
 Cards = []
 Suits = []
 Nums = []
 Folds = []
+Grid = []
 Rating = 0
 Cycles = 0
 Pot = 0
 Highscore = 0
-Winner = 0 
+Winner = 0
+Computers = 0
 Record_minirank = 0
 Record_minirank2 = 0
 Record_kicker = 0
@@ -23,26 +31,91 @@ Choice = ""
 Value = ""
 Tie = ""
 
-Object = open("Balance.txt", "r").readlines()
-Balance = int(Object[0])
-if Balance == 0:
-    print("You have 0 chips, You are being given 1000")
-    Balance = 1000
 
 
-Computers = int(input("(0 For tutorial)How many Computers will be playing? "))
-if Computers == 0:
-    Tutorial = open("Tutorial.txt", "r")
-    print(Tutorial.read())
+
+        
+folder = "Spades"
+files = os.listdir(folder)
+path = os.path.join(folder, files[Num_Test])
+Ace = tk.PhotoImage(file=path)
+label = tk.Label(image=Ace)
+label.pack()
+        
     
-while Computers < 1 or Computers > 22:
-    print("Error message, put a usable amount of Computers in")
-    Computers = int(input("How many Computers will be playing? "))
-if Computers == 22:
-    Choice = "All in"
+
+#Deal with blinds
+#Computers need the ability to self raise
+
+def Amount_of_players():
+    global Computers
+    while True:
+        tb_val = Textbox.get("1.0", "end")
+        try:
+            int(tb_val) > 0
+            while int(tb_val) < 0 or int(tb_val) > 22:
+                print("Value is out of range")
+                tb_val = Textbox.get("1.0", "end")
+                break
+            if int(tb_val) < 20:
+                print("In range",int(tb_val))
+                Computers = int(tb_val)
+                Playing()
+                break
+                
+            break
+        except ValueError:
+            print("Error")
+            tb_val = Textbox.get("1.0", "end")
+            break
 
 
+def Playing():
+    global Textbox, Button3
+    if Computers == 0:
+        Button.destroy()
+        Button2.destroy()
+        Textbox = tk.Text(root, height = 12, font = ("Arial", 16))
+        Textbox.pack()
+        Button3 = tk.Button(root, text="Confirm", font=("Arial", 18), command = Amount_of_players)
+        Button3.pack()
+    else:
+        Textbox.destroy()
+        Button3.destroy()
+        print("The holy days")
+        Drawing()
+    
+
+    
+
+def Drawing():
+    print("Testage")
+    
+    
+        
+def Tutorial():
+    print("%")
+    #Tutorial = open("Tutorial.txt", "r")
+    #print(Tutorial.read())
+    #sys.exit()
+    
+root.geometry("800x500")
+root.title("Poker")
+Label = tk.Label(root, text = "Hello.", font = ("Arial", 20))
+Label.pack(padx = 20, pady = 20)
+
+Button = tk.Button(root, text="Start", font=("Arial", 18), command = Playing)
+Button.pack()
+                 
+Button2 = tk.Button(root, text="Secondary", font=("Arial", 18), command = Tutorial)
+Button2.pack()
+
+
+root.mainloop()    
+
+print("Computers is", Computers)
 Computers = Computers + 1
+
 #Does a small check to see how many CPUs the Computer wants to play against
 def King_Maker():
     global Placeholder
@@ -74,6 +147,9 @@ def Cards_Test():
             Card_check = "No"
             Cards_Test()
     if Card_check == "":
+        
+        
+        
         Cards.append(Card_placeholder)
         Nums.append(Number_option)
         Suits.append(Suit)
@@ -452,6 +528,13 @@ def Bet():
             print("opponent calls, skipping all future betting rounds")
             Pot = Pot + Balance
             Balance = 0
+
+        elif Choice == "End" or Choice == "end":
+            with open("Player_count.txt", "w") as Object2:
+                Object2.write("")
+            sys.exit()
+
+            
         else:
             print("Try again")
             Bet()
@@ -470,16 +553,14 @@ def Bet():
 
 def Computer_Decision(i):
     global Rating, Value
-    Rating = 0
+    Rating = Pair_num = Triple_num = 0
     for j in range(0,len(Folds)):
         if i == Folds[j]:
             return
         
     Num_list = [Nums[2*i],Nums[(2*i)+1],Nums[-5],Nums[-4],Nums[-3],Nums[-2]]
     Suit_list = [Suits[2*i],Suits[(2*i)+1],Suits[-5],Suits[-4],Suits[-3],Suits[-2]]
-    for i in range(0,len(Num_list)):
-        if Num_list[i] == 1:
-            Num_list[i] = 14
+    
 
             
     if Cycles == 0:
@@ -487,73 +568,146 @@ def Computer_Decision(i):
             Num_list.pop(2)
             Suit_list.pop(2)
         Num_list.sort()
+        
+        for i in range(0,len(Num_list)):
+            if Num_list[i] == 1:
+                Num_list[i] = 14
             
-        if Num_list[0] == Num_list[1]:
-            Rating = (2*Num_list[0]) + 70
+            if Num_list[0] == Num_list[1]:
+                Rating = (2*Num_list[0]) + 70
             
-        if Num_list[0] == Num_list[1] + 1 or Num_list[0] == Num_list[1] - 1:
-            Rating = (5*Num_list[0]) + 30
+            if Num_list[0] == Num_list[1] + 1 or Num_list[0] == Num_list[1] - 1:
+                Rating = (5*Num_list[0]) + 30
 
-        if Num_list[0] == Num_list[1] + 2 or Num_list[0] == Num_list[1] - 2:
-            Rating = (3*Num_list[0]) + 20
+            if Num_list[0] == Num_list[1] + 2 or Num_list[0] == Num_list[1] - 2:
+                Rating = (3*Num_list[0]) + 20
             
-        if Suit_list[0] == Suit_list[1] and Rating == 0:
-            Rating = ((Num_list[0] + Num_list[1]) / 2) * 6
+            if Suit_list[0] == Suit_list[1] and Rating == 0:
+                Rating = ((Num_list[0] + Num_list[1]) / 2) * 6
             
-        elif Suit_list[0] == Suit_list[1] and Rating > 0:
-            Rating = Rating + ((Num_list[0] + Num_list[1]) / 2) * 6
+            elif Suit_list[0] == Suit_list[1] and Rating > 0:
+                Rating = Rating + ((Num_list[0] + Num_list[1]) / 2) * 6
             
-        if Rating == 0:
-            Rating = (3*Num_list[0]) + (3*Num_list[1])
+            if Rating == 0:
+                Rating = (3*Num_list[0]) + (3*Num_list[1])
 
 
             
-    if Cycles == 1:
-        Num_list.pop()
-        Suit_list.pop()
+    if Cycles == 1 or Cycles == 2:
+        if Cycles == 1:
+            Num_list.pop()
+            Suit_list.pop()
+        
+        for i in range(0,len(Num_list)):
+            if Num_list[i] == 1:
+                Num_list[i] = 14
+                
         Num_list.sort()
         Suit_list.sort()
-        print(Suit_list)
-        Temp_list = list(dict.fromkeys(Num_list))
-        for i in range(0,len(Temp_list)-3):
-            Num = Temp_list[i]
-            if Num + 3 == Temp_list[i+3]:
-                print("EEEE")
-        #4 straight
-        for i in range(0,len(Temp_list)-2):
-            Num = Temp_list[i]
-            if Num + 2 == Temp_list[i+2]:
-                print("F")
-        #3 straight
-
-        for i in range(0,len(Temp_list)-3):
-            Num = Temp_list[i]
-            if Num + 4 == Temp_list[i+3]:
-                print("GG")
-        #4 straight gapped
-
-        for i in range(0,len(Suit_list)-3):
-            if Suit_list[i] == Suit_list[i+3]:
-                print("HHH")
-        #4 Flush
-        for i in range(0,len(Suit_list)-2):
-            if Suit_list[i] == Suit_list[i+2]:
-                print("I")
-        #3 Flush
+        
+        
 
         
-            
-            
-                    
-                    
+        for i in range(0,len(Num_list) - 2):
+            if Num_list[i] == Num_list[i+2]:
+                print("Triple")
+                Triple_num = Num_list[i]
+                Rating = (3*Num_list[i] + 50)
+                #Triple
+                
+        for i in range(0,len(Num_list) - 1):
+            if Num_list[i] == Num_list[i+1] and Num_list[i] != Triple_num:
+                print("Pair")
+                Pair_num = Num_list[i]
+                Rating = (2*Num_list[i] + 40)
+               #Pair
+                
+        for i in range(0,len(Num_list) - 3):
+            if Num_list[i] == Num_list[i+3]:
+                print("Quad")
+                Rating = (4*Num_list[i] + 60)
+                #Quad
+                
+        for i in range(0,len(Num_list) - 1):
+            if Num_list[i] == Num_list[i+1] and Num_list[i] < Pair_num and Rating < ((3*Pair_num) + (2*Num_list[i]) + 30):
+                print("Two pair")
+                Rating = (3*Pair_num) + (2*Num_list[i]) + 30
+                print("Rating from 2 pair is", Rating)
+                #Two pair
+
+        for i in range (0,len(Num_list) - 2):
+            if Num_list[i] == Num_list[i+2] and Pair_num > 0 and Rating < (5*Triple_num) + (2*Pair_num) + 40:
+                print("Full house!")
+                Rating = (5*Triple_num) + (2*Pair_num) + 400
+
+        print("Pair_num is", Pair_num)
+        print("Rating is", Rating)
 
 
+
+        Temp_list = list(dict.fromkeys(Num_list))
+        for i in range(0,len(Num_list)):
+            if Num_list[i] == 14:
+                Temp_list.insert(0,1)
+
+
+            for i in range(0,len(Temp_list)-2):
+                Num = Temp_list[i]
+                if Num + 2 == Temp_list[i+2] and Rating < (2*Temp_list[i+2] + 40):
+                    print("3 straight")
+                    Rating = (2*Temp_list[i+2] + 40)
+                    #3 straight
+
+            for i in range(0,len(Temp_list)-3):
+                Num = Temp_list[i]
+                if Num + 4 == Temp_list[i+3] and Rating < (2*Temp_list[i+3] + 50):
+                    print("4 straight gapped")
+                    Rating = (2*Temp_list[i+3] + 50)
+                    #4 straight gapped
+                    
+            for i in range(0,len(Temp_list)-3):
+                Num = Temp_list[i]
+                if Num + 3 == Temp_list[i+3] and Rating < (2*Temp_list[i+3] + 55):
+                    print("4 straight")
+                    Rating = (2*Temp_list[i+3] + 55)
+                    #4 straight
+
+            for i in range(0,len(Temp_list)-4):
+                Num = Temp_list[i]
+                if Num + 4 == Temp_list[i+4] and Rating < (2*Temp_list[i+4] + 70):
+                    print("5 straight")
+                    Rating = (2*Temp_list[i+4] + 70)
+                    #5 straight
+
+
+        for i in range(0,len(Suit_list)-2):
+            if Suit_list[i] == Suit_list[i+2] and Rating < 40:
+                print("3 flush")
+                Rating = 40
+                #3 Flush
+
+        for i in range(0,len(Suit_list)-3):
+            if Suit_list[i] == Suit_list[i+3] and Rating < 75:
+                print("4 flush")
+                Rating = 75
+                #4 Flush
+                
+        for i in range(0,len(Suit_list)-4):
+            if Suit_list[i] == Suit_list[i+4] and Rating < 90:
+                print("5 flush")
+                Rating = 90
+                #5 Flush
+        print(Num_list)
+                
             
-    if Cycles == 2:
-        Num_list.sort()
+    
+                
+
 
     if Cycles == 3:
         Ranking_System(i)
+        print(Score)
+        Rating = Score * 10
 
 
 
@@ -567,7 +721,7 @@ def Computer_Decision(i):
         Value = "Great"
     else:
         Value = "Fantastic"
-    print(Num_list)
+    
         
             
 
@@ -592,7 +746,7 @@ def Computer_Check(i):
 
 
 def Computer_Raise(i):
-    print("Nower Rating is", Rating)
+    #print("Nower Rating is, Rating )
     for j in range(0,len(Folds)):
         if i == Folds[j]:
             return
@@ -625,7 +779,21 @@ for i in range(0,(2 * Computers) + 5):
 
 print("You have", Balance, "Chips")
 print("Your first card is the",Cards[0])
+folder = Suits[0]
+files = os.listdir(folder)
+path = os.path.join(folder, files[Nums[0]])
+Ace = tk.PhotoImage(file=path)
+label = tk.Label(image=Ace)
+label.pack()
+
 print("Your second card is the",Cards[1])
+folder = Suits[1]
+files = os.listdir(folder)
+path = os.path.join(folder, files[Nums[1]])
+Ace = tk.PhotoImage(file=path)
+label = tk.Label(image=Ace)
+label.pack()
+
 Bet()
 print("The first card of the flop is the",Cards[-5])
 print("The second card of the flop is the",Cards[-4])
@@ -636,8 +804,7 @@ Bet()
 print("The river is the",Cards[-1])
 Bet()
 print()
-Nums[-4] = 2
-Nums[-3] = 2
+
 
 i = 0
 for i in range(0,Computers):
@@ -656,6 +823,3 @@ if Winner == 0:
 Object = open("Balance.txt", "w")
 Object.write(str(Balance))
 Object.close()
-
-#
-

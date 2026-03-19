@@ -133,8 +133,6 @@ def Bet():
         Choice = input("Check, Raise or Fold: ")
         if Choice == "Check" or Choice == "check" or Choice == "C" or Choice == "c" :
             print("both players check")
-            for i in range(0,Computers):
-                Computer_check()
         elif Choice == "Raise" or Choice == "raise" or Choice == "R" or Choice == "r":
             Quantity = int(input("how much do you want to raise by? "))
             while Quantity > Balance:
