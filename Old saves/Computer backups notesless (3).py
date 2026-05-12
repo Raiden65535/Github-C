@@ -123,7 +123,9 @@ def Bet():
         elif Choice == "All in" or Choice == "all in" or Choice == "e":
             print("opponent calls, skipping all future betting rounds")
         else:
-            print("program didnt get what it wanted, shutting down")
+            print("Ivalid, enter a suitable option")
+            Quantity = int(input("Check, Raise or Fold: "))
+
             quit()
         print()
 
@@ -263,7 +265,7 @@ def Ranking_System():
         
              
     for i in range(0,5):
-        if Num_list[i] == Num_list[i+2] and Score < 4:
+        if Num_list[i] == Num_list[i+2]:
             Triple_num = Num_list[i]
             Minirank = Triple_num
             Placeholder = Triple_num

@@ -634,6 +634,11 @@ Object = open("Balance.txt", "w")
 Object.write(str(Balance))
 Object.close()
 
+print("Highscore is",Highscore)
+print("Record_minirank is", Record_minirank)
+print("Record_kicker is", Record_kicker)
+
+
 
 #For now im concerned about the players balance, the balance of the computers comes later
 #I`ve had Record_Minirank_2 = 0 exist for a while with no errors. Why didnt it break?

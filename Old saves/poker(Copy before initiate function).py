@@ -981,6 +981,7 @@ def Step():
 
     Max = max(Current_Bets)
     Min = min(Current_Bets)
+    print("Current_Bets is", Current_Bets)
 
     if Current_Bets[0] != Max:
         player_action_event.clear()
@@ -991,6 +992,7 @@ def Step():
         return
     
     else:
+        print("Success")
         player_action_event.clear()
         Raise_Check = "Yes"
         Button36 = tk.Button(root, text = "Confirm", font = ("Arial", 18) , command = Finale2)
